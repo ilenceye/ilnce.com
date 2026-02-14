@@ -19,7 +19,11 @@ export default defineConfig({
     rehypePlugins: [
       [
         rehypeExternalLinks,
-        { rel: ["nofollow", "noopener", "noreferrer"], target: "_blank" },
+        {
+          rel: ["nofollow", "noopener", "noreferrer"],
+          target: "_blank",
+          properties: { class: "external-link" },
+        },
       ],
     ],
   },
