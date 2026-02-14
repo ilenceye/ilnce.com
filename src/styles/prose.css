@@ -1,0 +1,99 @@
+@reference "./global.css";
+
+@layer base {
+  .prose {
+    @apply text-[15px];
+
+    & > :where(header, h1, h2, h3, p, ul, ol, pre, blockquote, .demo) {
+      @apply mb-6;
+    }
+
+    p,
+    ul,
+    ol {
+      line-height: 24px;
+    }
+
+    /* Heading */
+
+    h1 {
+      @apply border-b border-gray-300 pb-2 mb-6 text-3xl;
+    }
+
+    h2 {
+      @apply border-b border-gray-200 text-base pb-2 font-bold;
+    }
+
+    /* Link */
+
+    h1 a {
+      text-decoration: none;
+    }
+
+    a {
+      display: inline-block;
+      text-decoration: underline;
+      text-underline-position: from-font;
+      text-decoration-thickness: 0.08em;
+      text-decoration-color: var(--color-gray-300);
+      text-underline-offset: 2px;
+
+      &:hover {
+        text-decoration-color: var(--color-gray-600);
+      }
+    }
+
+    /* Blockquote */
+    blockquote {
+      @apply border-l-4 border-gray-600 pl-4;
+    }
+
+    /* List */
+
+    p:has(+ :is(ul, ol)) {
+      margin-bottom: 0.25rem;
+    }
+
+    ul,
+    ol {
+      padding-left: 1rem;
+
+      li::marker {
+        color: var(--color-gray-400);
+      }
+    }
+
+    ul {
+      list-style: disc inside;
+    }
+
+    ol {
+      list-style: decimal inside;
+    }
+
+    li:not(:last-child) {
+      margin-bottom: 0.25rem;
+    }
+
+    /* If the ul or ol is insise a li, remove its margin-bottom */
+    li:has(:is(ul, ol)) :is(ul, ol) {
+      margin-bottom: 0;
+    }
+
+    /* Code */
+    pre {
+      @apply border rounded p-4 border-gray-200 text-[15px];
+    }
+
+    /* Inline code */
+    li > code,
+    p > code {
+      border-radius: 0.375rem;
+      border-width: 1px;
+      border-color: var(--color-gray-200);
+      background-color: var(--color-gray-50);
+      padding: 2px 3.6px;
+      font-size: 0.8571429em;
+    }
+  }
+}

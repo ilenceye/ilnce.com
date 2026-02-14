@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ilnce.com",
+  "compatibility_date": "2025-10-11",
+  "assets": {
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": false
+  },
+  "routes": [
+    {
+      "pattern": "ilnce.com",
+      "custom_domain": true
+    }
+  ]
+}

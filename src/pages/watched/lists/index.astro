@@ -1,0 +1,22 @@
+---
+import { getCollection } from "astro:content";
+
+import Layout from "@/layouts/Layout.astro";
+
+const lists = await getCollection("piandan");
+---
+
+<Layout title="片单">
+  <section class="space-y-12">
+    <h2 class="font-bold text-2xl">片单</h2>
+    <ul class="space-y-4">
+      {
+        lists.map(({ data }) => (
+          <li>
+            <a href={`/watched/lists/${data.slug}/`}>{data.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

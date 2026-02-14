@@ -1,0 +1,44 @@
+---
+import "@/styles/prose.css";
+
+import { render } from "astro:content";
+import Demo from "@/components/Demo.astro";
+import Layout from "@/layouts/Layout.astro";
+import { getNotes } from "@/lib/collection";
+
+const notes = await getNotes();
+
+const n = await Promise.all(
+  notes.map(async ({ entry, ...note }) => {
+    const { Content } = await render(entry);
+    return { Content, ...note };
+  }),
+);
+---
+
+<Layout title="笔记">
+  <section class="space-y-12">
+    <h2 class="font-bold text-2xl">笔记</h2>
+    <ul class="space-y-16">
+      {
+        n.map(({ title, demoUrl, createdAt, Content }) => (
+          <li>
+            <time
+              datetime={createdAt}
+              class="text-gray-500 text-xs tabular-nums"
+            >
+              {createdAt}
+            </time>
+            <article class="space-y-6 mt-4">
+              {title && <h1 class="font-bold">{title}</h1>}
+              {demoUrl && <Demo src={demoUrl} />}
+              <div class="prose">
+                <Content />
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

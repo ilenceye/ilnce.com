@@ -1,0 +1,27 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  width?: string;
+  height?: string;
+}
+
+const { src, alt, width, height } = Astro.props;
+---
+
+<div class="rounded overflow-hidden shadow" style={{ width, height }}>
+  {
+    src ? (
+      <img
+        src={src}
+        alt={alt}
+        class="bg-muted text-muted-foreground size-full shrink-0 object-cover text-xs"
+        loading="lazy"
+      />
+    ) : (
+      <div class="bg-muted text-muted-foreground flex shrink-0 items-center justify-center text-xs">
+        无海报
+      </div>
+    )
+  }
+</div>

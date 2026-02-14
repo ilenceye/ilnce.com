@@ -1,0 +1,44 @@
+---
+import { getCollection, render } from "astro:content";
+
+import WatchedItem from "@/components/WatchedItem.astro";
+import Layout from "@/layouts/Layout.astro";
+
+const col = await getCollection("watched");
+const watcheds = await Promise.all(
+  col
+    .toSorted((a, b) => b.data.watchedAt.localeCompare(a.data.watchedAt))
+    .map(async (entry) => {
+      const { Content } = await render(entry);
+      return { Content: entry.body ? Content : undefined, data: entry.data };
+    }),
+);
+---
+
+<Layout title="看过的电影和电视剧">
+  <section class="space-y-12">
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold text-2xl">看过</h2>
+      <a
+        href="/watched/lists"
+        class="text-sm text-muted-foreground hover:text-foreground"
+      >
+        片单
+      </a>
+    </div>
+    <ul>
+      {
+        watcheds.map(({ Content, data }) => (
+          <li class="border-border/50 relative border-b py-6 space-y-4">
+            <WatchedItem {...data} />
+            {Content && (
+              <div class="space-y-3 text-[15px]">
+                <Content />
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

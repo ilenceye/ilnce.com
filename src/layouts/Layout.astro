@@ -1,0 +1,35 @@
+---
+import "@/styles/global.css";
+
+import Container from "@/layouts/Container.astro";
+import Header from "@/layouts/Header.astro";
+import { AUTHOR_NAME } from "@/lib/constants";
+
+interface Props {
+  title?: string;
+}
+
+const { title = AUTHOR_NAME } = Astro.props;
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>
+      {title === AUTHOR_NAME ? AUTHOR_NAME : `${title} - ${AUTHOR_NAME}`}
+    </title>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <Container>
+        <slot />
+      </Container>
+    </main>
+  </body>
+</html>

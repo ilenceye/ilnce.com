@@ -1,0 +1,26 @@
+---
+import "@/styles/global.css";
+import { AUTHOR_NAME } from "@/lib/constants";
+
+interface Props {
+  title?: string;
+  class?: string;
+}
+
+const { title = AUTHOR_NAME, class: className } = Astro.props;
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="#" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>
+      {title === AUTHOR_NAME ? AUTHOR_NAME : `${title} - ${AUTHOR_NAME}`}
+    </title>
+  </head>
+  <body class:list={["min-h-screen", className]}>
+    <slot />
+  </body>
+</html>

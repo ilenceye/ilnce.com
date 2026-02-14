@@ -1,0 +1,25 @@
+---
+import Icon from "@/components/Icon.astro";
+
+interface Props {
+  src: string;
+}
+
+const { src } = Astro.props;
+---
+
+<div
+  class="group bg-muted aspect-video rounded-md border overflow-clip relative"
+>
+  <a
+    href={src}
+    target="_blank"
+    class="absolute top-0 right-0 size-8 inline-flex items-center justify-center text-muted-foreground opacity-0 group-hover:opacity-100 focus:opacity-100"
+  >
+    <span class="sr-only">在新标签页打开 demo</span>
+    <Icon id="arrow-top-right" class="size-4" />
+  </a>
+  <div class="max-w-full min-w-80 h-full resize-x overflow-x-auto">
+    <iframe class="w-full h-full" src={src} loading="lazy"></iframe>
+  </div>
+</div>

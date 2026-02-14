@@ -1,0 +1,14 @@
+---
+type IconId = "arrow-top-right" | "star-filled";
+
+interface Props extends astroHTML.JSX.SVGAttributes {
+  id: IconId;
+}
+
+const { id, ...props } = Astro.props;
+---
+
+<svg {...props}>
+  <title>{id}</title>
+  <use href={`/icons.svg#${id}`}></use>
+</svg>
