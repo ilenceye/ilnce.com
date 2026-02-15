@@ -3,6 +3,8 @@ name: Deploy site
 on:
   push:
     branches: [ main ]
+  repository_dispatch:
+    types: [content-updated]
 
 jobs:
   deploy:
