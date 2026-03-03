@@ -53,10 +53,6 @@ export const getHtmlOnlySummary = (html: string) => {
   return lines.join("\n");
 };
 
-export const parseWikiLink = (value: string): string => {
-  return value.replace(/^\[\[/, "").replace(/\]\]$/, "").trim().toLowerCase();
-};
-
 export const parseMarkdownLink = (input: string) => {
   const match = input.match(/\[([^\]]+)\]\(([^)]+)\)/);
 

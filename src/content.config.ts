@@ -1,4 +1,4 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 
 import { WatchedItemSchema } from "@/schemas";
@@ -16,14 +16,4 @@ const watched = defineCollection({
   schema: WatchedItemSchema,
 });
 
-const piandan = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./content/piandan" }),
-  schema: z.object({
-    slug: z.string(),
-    title: z.string(),
-    createdAt: z.date(),
-    items: z.array(z.string()),
-  }),
-});
-
-export const collections = { links, notes, watched, piandan };
+export const collections = { links, notes, watched };
