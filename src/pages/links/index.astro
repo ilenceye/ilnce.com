@@ -1,19 +1,12 @@
 ---
 import "@/styles/prose.css";
 
-import { render } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Section from "@/layouts/Section.astro";
-import { getLinks } from "@/lib/collection";
+import { getLinks, renderCollection } from "@/lib/collection";
 
 const l = await getLinks("summary");
-
-const links = await Promise.all(
-  l.map(async ({ entry, ...link }) => {
-    const { Content } = await render(entry);
-    return { Content, ...link };
-  }),
-);
+const links = await renderCollection(l);
 ---
 
 <Layout title="链接">

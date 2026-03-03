@@ -1,19 +1,12 @@
 ---
 import "@/styles/prose.css";
 
-import { render } from "astro:content";
 import Demo from "@/components/Demo.astro";
 import Layout from "@/layouts/Layout.astro";
-import { getNotes } from "@/lib/collection";
+import { getNotes, renderCollection } from "@/lib/collection";
 
-const notes = await getNotes();
-
-const n = await Promise.all(
-  notes.map(async ({ entry, ...note }) => {
-    const { Content } = await render(entry);
-    return { Content, ...note };
-  }),
-);
+const n = await getNotes();
+const notes = await renderCollection(n);
 ---
 
 <Layout title="笔记">
@@ -21,7 +14,7 @@ const n = await Promise.all(
     <h2 class="font-bold text-2xl">笔记</h2>
     <ul class="space-y-16">
       {
-        n.map(({ title, demoUrl, createdAt, Content }) => (
+        notes.map(({ title, demoUrl, createdAt, Content }) => (
           <li>
             <time
               datetime={createdAt}

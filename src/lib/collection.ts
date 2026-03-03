@@ -1,4 +1,4 @@
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 import {
   getDataFromEntryBody,
@@ -7,6 +7,18 @@ import {
   getHtmlSansTitle,
   parseMarkdownLink,
 } from "@/lib/utils";
+
+// biome-ignore lint/suspicious/noExplicitAny: <just ignore it>
+export const renderCollection = async <T extends { entry: any }>(
+  items: T[],
+) => {
+  return Promise.all(
+    items.map(async ({ entry, ...rest }) => {
+      const { Content } = await render(entry);
+      return { Content, ...rest };
+    }),
+  );
+};
 
 const getDemoSlugs = () => {
   const files = import.meta.glob("@/pages/demos/*.astro");
