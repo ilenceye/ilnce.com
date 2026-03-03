@@ -1,0 +1,35 @@
+---
+import "@/styles/prose.css";
+
+import { render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { getLinks } from "@/lib/collection";
+
+export const getStaticPaths = async () => {
+  const links = await getLinks("full");
+
+  return links.map((link) => ({
+    params: { slug: link.slug },
+    props: { link },
+  }));
+};
+
+const { link } = Astro.props;
+const { Content } = await render(link.entry);
+---
+
+<Layout title={link.title}>
+  <article class="prose">
+    <h1 class="pb-0 border-b-0">
+      <a
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-bold underline underline-offset-4"
+      >
+        {link.title}
+      </a>
+    </h1>
+    <Content />
+  </article>
+</Layout>

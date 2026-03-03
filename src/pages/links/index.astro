@@ -1,0 +1,51 @@
+---
+import "@/styles/prose.css";
+
+import { render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Section from "@/layouts/Section.astro";
+import { getLinks } from "@/lib/collection";
+
+const l = await getLinks("summary");
+
+const links = await Promise.all(
+  l.map(async ({ entry, ...link }) => {
+    const { Content } = await render(entry);
+    return { Content, ...link };
+  }),
+);
+---
+
+<Layout title="链接">
+  <Section title="链接">
+    <ul class="space-y-16 mb-16">
+      {
+        links.map(({ slug, title, url, createdAt, Content }) => (
+          <li>
+            <article class="prose">
+              <h1 class="pb-0 border-b-0 text-base">
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-bold underline underline-offset-4"
+                >
+                  {title}
+                </a>
+              </h1>
+              <Content />
+            </article>
+            <a href={`/links/${slug}`}>
+              <time
+                datetime={createdAt}
+                class="text-gray-500 text-xs tabular-nums underline underline-offset-2"
+              >
+                {createdAt}
+              </time>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Layout>

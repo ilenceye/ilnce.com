@@ -3,6 +3,10 @@ import { glob } from "astro/loaders";
 
 import { WatchedItemSchema } from "@/schemas";
 
+const links = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./content/links" }),
+});
+
 const notes = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/notes" }),
 });
@@ -22,4 +26,4 @@ const piandan = defineCollection({
   }),
 });
 
-export const collections = { notes, watched, piandan };
+export const collections = { links, notes, watched, piandan };
