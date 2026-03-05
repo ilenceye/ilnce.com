@@ -13,7 +13,7 @@ const links = await renderCollection(l);
   <Section title="链接">
     <ul class="space-y-16 mb-16">
       {
-        links.map(({ slug, title, url, createdAt, Content }) => (
+        links.map(({ slug, title, url, type, createdAt, Content }) => (
           <li>
             <article class="prose">
               <h1 class="pb-0 border-b-0 text-base">
@@ -28,14 +28,17 @@ const links = await renderCollection(l);
               </h1>
               <Content />
             </article>
-            <a href={`/links/${slug}`}>
-              <time
-                datetime={createdAt}
-                class="text-gray-500 text-xs tabular-nums underline underline-offset-2"
-              >
-                {createdAt}
-              </time>
-            </a>
+            <div class="flex items-center gap-4 text-gray-500 text-xs ">
+              <a href={`/links/${slug}`}>
+                <time
+                  datetime={createdAt}
+                  class="tabular-nums underline underline-offset-2"
+                >
+                  {createdAt}
+                </time>
+              </a>
+              <span>#{type}</span>
+            </div>
           </li>
         ))
       }

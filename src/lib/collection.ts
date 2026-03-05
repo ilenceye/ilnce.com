@@ -52,23 +52,51 @@ export const getNotes = async () => {
   return notes;
 };
 
+/**
+ * 根据输入字符串中的 HH 返回对应的内容类型
+ * @param str - 输入字符串，格式如'2026-03-05t0700'
+ * @returns 返回'article'（当数字为06时）或'tutorial'（当数字为07时）
+ * @throws 当数字不是06/07时抛出错误
+ */
+const getLinkType = (str: string): "article" | "tutorial" => {
+  const hourCode = str.slice(11, 13);
+
+  const typeMap: Record<string, "article" | "tutorial"> = {
+    "06": "article",
+    "07": "tutorial",
+  };
+
+  const result = typeMap[hourCode];
+
+  if (!result) {
+    throw new Error(
+      `Invalid hour code: expected '06' or '07', got "${hourCode}"`,
+    );
+  }
+
+  return result;
+};
+
 export const getLinks = async (mode: "summary" | "full") => {
   const col = await getCollection("links");
   const links = col
     .map((entry) => {
+      const entryId = entry.id; // slugified filename
+
       if (!entry.body) {
-        throw new Error(`The body of ${entry.id} should not be empty`);
+        throw new Error(`The body of ${entryId} should not be empty`);
       }
 
       const { title: markdownLink } = getDataFromEntryBody(entry.body);
       const markdownLinkData = parseMarkdownLink(markdownLink!);
       if (!markdownLinkData) {
-        throw new Error(`The title of ${entry.id} should be a markdown link`);
+        throw new Error(`The title of ${entryId} should be a markdown link`);
       }
       const { title, url } = markdownLinkData;
 
-      const slug = entry.id.slice(0, 16); // "YYYY-MM-DDTHHMM-".length
-      const createdAt = entry.id.slice(0, 10); // "YYYY-MM-DD".length
+      const slug = entryId.slice(0, 16); // "YYYY-MM-DDTHHMM-".length
+      const createdAt = entryId.slice(0, 10); // "YYYY-MM-DD".length
+      const type = getLinkType(entryId);
 
       const renderedHtml = entry.rendered?.html || "";
       const modifiedRenderedHtml =
@@ -80,6 +108,7 @@ export const getLinks = async (mode: "summary" | "full") => {
         slug,
         title,
         url,
+        type,
         createdAt,
         entry: {
           ...entry,
