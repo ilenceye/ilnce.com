@@ -11,9 +11,13 @@ const notes = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/notes" }),
 });
 
+const shorts = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./content/shorts" }),
+});
+
 const watched = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/watched" }),
   schema: WatchedItemSchema,
 });
 
-export const collections = { links, notes, watched };
+export const collections = { links, notes, shorts, watched };

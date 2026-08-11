@@ -1,0 +1,55 @@
+---
+import "@/styles/prose.css";
+
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Section from "@/layouts/Section.astro";
+
+const getDataFromEntryFilename = (filename: string) => {
+  // filename is somethings like: "YYYY-MM-DD-xxx-xxx.md"
+  const createdAt = filename.slice(0, 10); // "YYYY-MM-DD".length
+  const slug = filename.slice(11); // "YYYY-MM-DD-".length
+  return { createdAt, slug };
+};
+
+const getShorts = async () => {
+  const cols = await getCollection("shorts");
+  const shorts = await Promise.all(
+    cols.map(async (col) => {
+      const { createdAt, slug } = getDataFromEntryFilename(col.id);
+      const { Content } = await render(col);
+      return { Content, createdAt, slug };
+    }),
+  );
+
+  return shorts.toSorted((a, b) => b.createdAt.localeCompare(a.createdAt));
+};
+
+const shorts = await getShorts();
+---
+
+<Layout title="Shorts">
+  <Section title="Shorts">
+    <ul class="space-y-16 mb-16">
+      {
+        shorts.map(({ Content, createdAt, slug }) => (
+          <li>
+            <div class="mb-6 flex items-center gap-4 text-gray-500 text-xs">
+              <a href={`/shorts/${slug}`}>
+                <time
+                  datetime={createdAt}
+                  class="tabular-nums underline underline-offset-2"
+                >
+                  {createdAt}
+                </time>
+              </a>
+            </div>
+            <article class="prose">
+              <Content />
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Layout>
