@@ -12,7 +12,7 @@ export const getDataFromEntryFilename = (filename: string) => {
 };
 
 export const getStaticPaths = async () => {
-  const col = await getCollection("shorts");
+  const col = await getCollection("notes");
 
   return col.map((entry) => {
     const { createdAt, slug } = getDataFromEntryFilename(entry.id);
@@ -27,9 +27,9 @@ const { entry, createdAt, slug } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<Layout>
+<Layout title={slug}>
   <div class="mb-6 flex items-center gap-4 text-gray-500 text-xs">
-    <a href={`/shorts/${slug}`}>
+    <a href={`/notes/${slug}`}>
       <time
         datetime={createdAt}
         class="tabular-nums underline underline-offset-2"

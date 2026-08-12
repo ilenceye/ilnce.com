@@ -1,37 +1,55 @@
 ---
 import "@/styles/prose.css";
 
-import Demo from "@/components/Demo.astro";
+import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import { getNotes, renderCollection } from "@/lib/collection";
+import Section from "@/layouts/Section.astro";
 
-const n = await getNotes();
-const notes = await renderCollection(n);
+const getDataFromEntryFilename = (filename: string) => {
+  // filename is somethings like: "YYYY-MM-DD-xxx-xxx.md"
+  const createdAt = filename.slice(0, 10); // "YYYY-MM-DD".length
+  const slug = filename.slice(11); // "YYYY-MM-DD-".length
+  return { createdAt, slug };
+};
+
+const getItems = async () => {
+  const cols = await getCollection("notes");
+  const items = await Promise.all(
+    cols.map(async (col) => {
+      const { createdAt, slug } = getDataFromEntryFilename(col.id);
+      const { Content } = await render(col);
+      return { Content, createdAt, slug };
+    }),
+  );
+
+  return items.toSorted((a, b) => b.createdAt.localeCompare(a.createdAt));
+};
+
+const notes = await getItems();
 ---
 
 <Layout title="笔记">
-  <section class="space-y-12">
-    <h2 class="font-bold text-2xl">笔记</h2>
-    <ul class="space-y-16">
+  <Section title="笔记">
+    <ul class="space-y-16 mb-16">
       {
-        notes.map(({ title, demoUrl, createdAt, Content }) => (
+        notes.map(({ Content, createdAt, slug }) => (
           <li>
-            <time
-              datetime={createdAt}
-              class="text-gray-500 text-xs tabular-nums"
-            >
-              {createdAt}
-            </time>
-            <article class="space-y-6 mt-4">
-              {title && <h1 class="font-bold">{title}</h1>}
-              {demoUrl && <Demo src={demoUrl} />}
-              <div class="prose">
-                <Content />
-              </div>
+            <div class="mb-6 flex items-center gap-4 text-gray-500 text-xs">
+              <a href={`/notes/${slug}`}>
+                <time
+                  datetime={createdAt}
+                  class="tabular-nums underline underline-offset-2"
+                >
+                  {createdAt}
+                </time>
+              </a>
+            </div>
+            <article class="prose">
+              <Content />
             </article>
           </li>
         ))
       }
     </ul>
-  </section>
+  </Section>
 </Layout>
