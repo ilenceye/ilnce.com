@@ -20,4 +20,8 @@ const watched = defineCollection({
   schema: WatchedItemSchema,
 });
 
-export const collections = { links, notes, shorts, watched };
+const words = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./content/words" }),
+});
+
+export const collections = { links, notes, shorts, watched, words };
