@@ -1,5 +1,50 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
+import { getDataFromEntryBody } from "@/lib/utils";
+
+/**
+ * @param filename filename is somethings like: "YYYY-MM-DD-xxx-xxx.md"
+ */
+const getDataFromEntryFilename = (filename: string) => {
+  const createdAt = filename.slice(0, 10); // "YYYY-MM-DD".length
+  const slug = filename.slice(11); // "YYYY-MM-DD-".length
+  return { createdAt, slug };
+};
+
+const getPosts = async () => {
+  const entries = await getCollection("posts");
+  const posts = entries
+    .map((entry) => {
+      const { createdAt, slug } = getDataFromEntryFilename(entry.id);
+      const { title } = getDataFromEntryBody(entry.body ?? "");
+      return { slug, createdAt, title };
+    })
+    .toSorted((a, b) => b.createdAt.localeCompare(a.createdAt));
+  return posts;
+};
+
+const posts = await getPosts();
 ---
 
-<Layout />
+<Layout>
+  <section>
+    <ul class="flex flex-col gap-6 mb-20">
+      {
+        posts.map((post) => (
+          <li class="flex flex-col gap-2 relative">
+            <time
+              datetime={post.createdAt}
+              class="text-gray-500 text-xs tabular-nums"
+            >
+              {post.createdAt}
+            </time>
+            <a href={`/${post.slug}`} class="before:absolute before:inset-0">
+              {post.title ?? "Untitled"}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

@@ -1,0 +1,44 @@
+---
+import "@/styles/prose.css";
+
+import { getCollection, render } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import { getDataFromEntryBody } from "@/lib/utils";
+
+/**
+ * @param filename filename is somethings like: "YYYY-MM-DD-xxx-xxx.md"
+ */
+export const getDataFromEntryFilename = (filename: string) => {
+  const createdAt = filename.slice(0, 10); // "YYYY-MM-DD".length
+  const slug = filename.slice(11); // "YYYY-MM-DD-".length
+  return { createdAt, slug };
+};
+
+export const getStaticPaths = (async () => {
+  const entries = await getCollection("posts");
+  return entries.map((entry) => {
+    const { createdAt, slug } = getDataFromEntryFilename(entry.id);
+    const { title } = getDataFromEntryBody(entry.body ?? "");
+
+    return {
+      params: { slug },
+      props: { entry, createdAt, title },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { entry, createdAt, title } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Layout title={title ?? "Untitled"}>
+  <div class="mb-3">
+    <time datetime={createdAt} class="text-gray-500 text-xs tabular-nums">
+      {createdAt}
+    </time>
+  </div>
+  <article class="prose mb-20">
+    <Content />
+  </article>
+</Layout>
