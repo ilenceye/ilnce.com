@@ -13,8 +13,4 @@ const posts = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/posts" }),
 });
 
-const words = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./content/words" }),
-});
-
-export const collections = { links, notes, words, posts };
+export const collections = { links, notes, posts };
